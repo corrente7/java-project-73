@@ -1,22 +1,18 @@
 package hexlet.code.controller;
 
-import hexlet.code.dto.AuthResponseDto;
-import hexlet.code.dto.AuthRequestDto;
+import hexlet.code.dto.LoginDto;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.AuthServiceImpl;
 import hexlet.code.util.JwtTokenUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api")
 public class AuthController {
 
@@ -34,25 +30,10 @@ public class AuthController {
 
 
     @PostMapping(path = "/login")
-//    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequest) throws Exception {
-//
-//        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-//
-//        final String token = jwtTokenUtil.generateToken(authenticationRequest.getUsername());
-//
-//        return ResponseEntity.ok(new AuthenticateResponseDto(token));
-//    }
 
-
-    ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequestDto requestDto) {
-        return ResponseEntity.ok(authServiceImpl.authenticate(requestDto));
-    }
-//        try {
-
-//            Authentication authentication =
-//                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-
+    ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginDto requestDto) {
+            return ResponseEntity.ok(authServiceImpl.authenticate(requestDto));
+ }
 
 
 

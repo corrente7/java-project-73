@@ -2,15 +2,17 @@ package hexlet.code.util;
 
 import hexlet.code.model.User;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -27,16 +29,25 @@ public class JwtTokenUtil {
 
     private final String TOKEN_HEADER = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
+    private String secretKey = "793D494F99F601B3AD414EDD2A4E211367828B78D6B6B89C56497FC244EE2C6D";
 
-    private String getSecretKey() {
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        secretString = Encoders.BASE64.encode(key.getEncoded());
-        return secretString;
-    }
 
 
     public JwtTokenUtil(){
-        this.jwtParser = Jwts.parser().setSigningKey(getSecretKey());
+
+        this.jwtParser = Jwts.parser().setSigningKey(secretKey);
+        //this.jwtParser = Jwts.parser().setSigningKey(getSecretKey());
+    }
+
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+        private String getSecretKey() {
+        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        secretString = Encoders.BASE64.encode(key.getEncoded());
+        return secretString;
     }
 
     public String generateToken(User user) {
@@ -49,7 +60,8 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(tokenValidity)
-                .signWith(SignatureAlgorithm.HS256, getSecretKey())
+                //.signWith(SignatureAlgorithm.HS256, getSecretKey())
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -91,13 +103,14 @@ public class JwtTokenUtil {
         }
     }
 
-    public String getEmail(Claims claims) {
-        return claims.getSubject();
-    }
 
-    private List<String> getRoles(Claims claims) {
-        return (List<String>) claims.get("roles");
-    }
+//    public String getEmail(Claims claims) {
+//        return claims.getSubject();
+//    }
+//
+//    private List<String> getRoles(Claims claims) {
+//        return (List<String>) claims.get("roles");
+//    }
 
 
 }

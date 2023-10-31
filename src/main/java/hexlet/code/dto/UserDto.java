@@ -28,5 +28,4 @@ public class UserDto {
     @NotBlank
     @Size(min = 3)
     private String password;
-    //private Date createdAt;
 }

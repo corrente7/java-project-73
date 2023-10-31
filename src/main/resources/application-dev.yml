@@ -1,15 +1,18 @@
 spring:
+  logging:
+    level:
+      web: DEBUG
+      root: INFO
   datasource:
-    username: ""
-    password: ""
-    url: "jdbc:h2:./taskManager"
-
-  jpa:
-    show-sql: true
-
+    username: user
+    url: jdbc:h2:mem:project5DB;DB_CLOSE_ON_EXIT=FALSE
+    password: password
   h2:
     console:
-      enabled: true
-      path: /h2console/
-      settings:
-        web-allow-others: true
+      enabled: 'true'
+      path:
+        settings:
+          web-allow-others: 'true'
+        nodeValue: /h2console/
+  jpa:
+    show-sql: 'true'

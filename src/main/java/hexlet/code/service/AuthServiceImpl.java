@@ -1,6 +1,6 @@
 package hexlet.code.service;
 
-import hexlet.code.dto.AuthRequestDto;
+import hexlet.code.dto.LoginDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.JwtTokenUtil;
@@ -19,7 +19,7 @@ public class AuthServiceImpl {
     @Autowired
     private JwtTokenUtil jwtUtils;
 
-    public String authenticate(AuthRequestDto requestDto) {
+    public String authenticate(LoginDto requestDto) {
         User existedUser = userRepository.findUserByEmailIgnoreCase(requestDto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Sign in failed. User not found!"));
 

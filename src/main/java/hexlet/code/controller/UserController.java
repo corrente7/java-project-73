@@ -3,6 +3,7 @@ package hexlet.code.controller;
 import hexlet.code.dto.UserDto;
 import hexlet.code.exception.UserNotFoundException;
 import hexlet.code.model.User;
+import hexlet.code.model.UserRole;
 import hexlet.code.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class UserController {
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(encoder.encode(userDto.getPassword()));
+        user.setRole(UserRole.USER);
         return userRepository.save(user);
     }
 

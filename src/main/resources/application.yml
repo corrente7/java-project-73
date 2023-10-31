@@ -1,19 +1,17 @@
 spring:
+  output:
+    ansi:
+      enabled: always
+  thymeleaf:
+    check-template-location: 'false'
   jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-    output:
-      ansi:
-        enabled: always
+    properties:
+      hibernate:
+        format_sql: 'true'
+    show-sql: 'true'
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:development}
+base:
+  url: /api
 
-  datasource:
-     driver-class-name: org.h2.Driver
-     url: jdbc:h2:mem:localhost;DB_CLOSE_ON_EXIT=FALSE
-     username: ""
-     password: ""
-
-
-server:
-  port: 7777
 

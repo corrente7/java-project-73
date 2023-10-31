@@ -3,10 +3,7 @@ package hexlet.code.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -14,8 +11,8 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
 @Table(name = "users")
-
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -40,8 +37,7 @@ public class User {
     @CreationTimestamp
     private Date createdAt;
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+    @JsonIgnore
+    private UserRole role;
+
 }
