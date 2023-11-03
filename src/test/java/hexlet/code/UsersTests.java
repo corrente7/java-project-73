@@ -2,21 +2,14 @@ package hexlet.code;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashMap;
-
+import hexlet.code.dto.LoginDto;
+import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
-import hexlet.code.model.UserRole;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.JwtTokenUtil;
 import hexlet.code.utils.TestUtils;
-import io.jsonwebtoken.Jwts;
 import org.instancio.Instancio;
-import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +17,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 
 @SpringBootTest
@@ -56,11 +55,15 @@ public class UsersTests {
 
     private final String baseUrl = "http://localhost:8080";
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         testUser = Instancio.of(testUtils.getUserModel())
                 .create();
-        System.out.println(testUser);
         userRepository.save(testUser);
         token = jwtTokenUtil.generateToken(testUser);
     }
@@ -68,41 +71,121 @@ public class UsersTests {
 
     @Test
     public void getUsersTest() throws Exception {
+        User testUser1 = Instancio.of(testUtils.getUserModel())
+                .create();
+        userRepository.save(testUser1);
         MockHttpServletResponse response = mockMvc
                 .perform(get(baseUrl + "/api/users"))
                 .andReturn()
                 .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
-        //assertThatJson(response.getContentAsString()).isArray();
         assertThat(response.getContentAsString()).contains(testUser.getFirstName());
         assertThat(response.getContentAsString()).contains(testUser.getLastName());
+        assertThat(response.getContentAsString()).contains(testUser1.getFirstName());
+        assertThat(response.getContentAsString()).contains(testUser1.getLastName());
 
-//        final List<User> userList = objectMapper.readValue(response.getContentAsString(), new TypeReference<>() { });
-//        final List<User> expected = userRepository.findAll();
-//        assertThat(expected.size()).isEqualTo(userList.size());
-//        assertThat(userList).containsAll(expected);
+    }
+
+    @Test
+    public void getUserTest() throws Exception {
+        var user = userRepository.findById(testUser.getId()).get();
+
+        Long id = user.getId();
+
+        MockHttpServletResponse response = mockMvc
+                .perform(get(baseUrl + "/api/users/" + id)
+                        .header("Authorization", "Bearer " + token))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentAsString()).contains(testUser.getFirstName());
+        assertThat(response.getContentAsString()).contains(testUser.getLastName());
+        assertThat(response.getContentAsString()).contains(testUser.getEmail());
+    }
+
+    @Test
+    public void createUserTest() throws Exception {
+        UserDto userDto = new UserDto();
+        userDto.setFirstName("Mark");
+        userDto.setLastName("Walker");
+        userDto.setEmail("mark@google.com");
+        userDto.setPassword("12345");
+
+        MockHttpServletResponse response = mockMvc
+                .perform(post(baseUrl + "/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(userDto)))
+                .andReturn()
+                .getResponse();
+
+
+        assertThat(response.getStatus()).isEqualTo(201);
+
+        MockHttpServletResponse response1 = mockMvc
+                .perform(get(baseUrl + "/api/users"))
+                .andReturn()
+                .getResponse();
+
+        assertThat(response1.getStatus()).isEqualTo(200);
+        assertThat(response1.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
+        assertThat(response1.getContentAsString()).contains("Mark", "Walker", "mark@google.com");
     }
 
     @Test
     public void testUpdate() throws Exception {
 
-        var data = new HashMap<>();
-        data.put("firstName", "Mike");
-
-        var user = userRepository.findById(testUser.getId()).get();
+        Long id = testUser.getId();
+        UserDto userDto = new UserDto("user@gmail.com", "Mike", testUser.getLastName(), "666777");
 
         MockHttpServletResponse response = mockMvc
-                .perform(put(baseUrl + "/api/users/" + user.getId())
+                .perform(put(baseUrl + "/api/users/" + id)
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(data)))
+                        .content(om.writeValueAsString(userDto)))
                 .andReturn().getResponse();
 
         assertNotNull(token);
 
         assertThat(response.getStatus()).isEqualTo(200);
 
-        assertThat(user.getFirstName()).isEqualTo(("Mike"));
+        MockHttpServletResponse response1 = mockMvc
+                .perform(get(baseUrl + "/api/users/" + id)
+                        .header("Authorization", "Bearer " + token))
+                .andReturn().getResponse();
+
+        assertThat(response1.getContentAsString()).contains("Mike");
+        assertThat(response.getContentAsString()).contains("user@gmail.com");
+
     }
+
+    @Test
+    public void deleteUserTest() throws Exception {
+
+        MockHttpServletResponse response = mockMvc
+                .perform(delete(baseUrl + "/api/users/" + testUser.getId())
+                        .header("Authorization", "Bearer " + token)
+                )
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(userRepository.findById(testUser.getId())).isEmpty();
+    }
+
+    @Test
+    public void loginUserTest() throws Exception {
+        LoginDto credentials = new LoginDto(testUser.getEmail(), testUser.getPassword());
+        System.out.println(testUser);
+        System.out.println(credentials);
+
+        MockHttpServletResponse login = mockMvc
+                .perform(post(baseUrl + "/api/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(credentials)))
+                .andReturn()
+                .getResponse();
+
+        assertThat(login.getStatus()).isEqualTo(200);
+    }
+
 }

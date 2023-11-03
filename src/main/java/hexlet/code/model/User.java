@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
-@ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
+@ToString
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,6 +38,16 @@ public class User {
     private Date createdAt;
 
     @JsonIgnore
+    @Enumerated(EnumType.STRING)
     private UserRole role;
+
+//    @JsonIgnore
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return role.getAuthorities();
+//    }
+
+
+
 
 }

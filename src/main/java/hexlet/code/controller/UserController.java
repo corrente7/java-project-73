@@ -7,6 +7,7 @@ import hexlet.code.model.UserRole;
 import hexlet.code.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class UserController {
     }
 
     @PostMapping(path = "")
+    @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody UserDto userDto) {
 
         User user = new User();
@@ -45,8 +47,8 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @PatchMapping(path = "/{id}")
-    public User updateUser(@RequestBody UserDto userDto, @PathVariable long id) {
+    @PutMapping(path = "/{id}")
+    public User updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Long id) {
         if (!userRepository.existsById(id)) {
             // Если не существует, возвращаем код ответа 404
             throw new UserNotFoundException("User" + id + "not found");
@@ -57,9 +59,11 @@ public class UserController {
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(encoder.encode(userDto.getPassword()));
+        user.setRole(user.getRole());
         return userRepository.save(user);
     }
 
+    @DeleteMapping(path = "/{id}")
     public void deleteUser(@PathVariable long id) {
         if (!userRepository.existsById(id)) {
             // Если не существует, возвращаем код ответа 404
