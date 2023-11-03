@@ -23,7 +23,7 @@ application {
 }
 
 wrapper{
-	gradleVersion = '8.3'
+	gradleVersion = '8.2'
 }
 
 configurations {
@@ -143,6 +143,7 @@ installFrontend {
 }
 
 processResources.dependsOn assembleFrontend
+
 
 
 openApi {
