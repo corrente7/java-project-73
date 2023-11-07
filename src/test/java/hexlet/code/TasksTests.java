@@ -222,6 +222,7 @@ public class TasksTests {
         assertThat(taskRepository.findById(testTask.getId())).isEmpty();
     }
 
+    // не работает
     @Test
     public void getTasksWithParamsTest() throws Exception {
 
@@ -257,7 +258,6 @@ public class TasksTests {
         assertThat(response.getContentAsString()).contains(testTask.getName());
         assertThat(response.getContentAsString()).contains(testTask1.getName());
         assertThat(response.getContentAsString()).contains(testTask1.getAuthor().getFirstName());
-//        assertThat(response.getContentAsString()).contains(testTask1.getName());
 
     }
 
