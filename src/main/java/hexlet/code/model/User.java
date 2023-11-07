@@ -41,13 +41,5 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-//    @JsonIgnore
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return role.getAuthorities();
-//    }
-
-
-
 
 }

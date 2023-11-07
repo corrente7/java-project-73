@@ -4,7 +4,9 @@ package hexlet.code.controller;
 import hexlet.code.dto.TaskDto;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.service.TaskServiceImpl;
 import hexlet.code.service.UserDetailsServiceImpl;
 import jakarta.validation.Valid;
@@ -18,6 +20,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+
 import com.querydsl.core.types.Predicate;
 
 @RestController
@@ -26,6 +30,9 @@ public class TaskController {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
@@ -44,21 +51,23 @@ public class TaskController {
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
-    public Task createTask(@AuthenticationPrincipal UserDetails userDetails, @Valid @RequestBody TaskDto taskDto ) {
+    public Task createTask(@Valid @RequestBody TaskDto taskDto) {
 
         List <Label> labels = taskServiceImpl.addLabels(taskDto);
 
         Task task = new Task();
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
-        task.setAuthor(userDetailsServiceImpl.getCurrentUserName(userDetails));
+        task.setAuthor(userDetailsServiceImpl.getCurrentUserName());
+        task.setTaskStatus(taskStatusRepository.findById(taskDto.getTaskStatusId()).orElseThrow());
         task.setExecutor(taskDto.getExecutor());
         task.setLabels(labels);
         return taskRepository.save(task);
     }
 
-    @PatchMapping(path = "/{id}")
+    @PutMapping(path = "/{id}")
     public Task updateTask(@RequestBody TaskDto taskDto, @PathVariable long id) {
         if (!taskRepository.existsById(id)) {
             // Если не существует, возвращаем код ответа 404
@@ -75,14 +84,18 @@ public class TaskController {
         return taskRepository.save(task);
     }
 
-    public void deleteTask(@PathVariable long id, @AuthenticationPrincipal UserDetails userDetails) {
+    @DeleteMapping(path = "/{id}")
+    public void deleteTask(@PathVariable long id) {
         if (!taskRepository.existsById(id)) {
-            // Если не существует, возвращаем код ответа 404
             throw new NoSuchElementException("Task not found");
         }
 
-        Task task = taskRepository.findById(id).get();
-        if (!userDetailsServiceImpl.getCurrentUserName(userDetails).equals(task.getAuthor()))
+        Task task = taskRepository.findById(id).orElseThrow();
+
+        User currentUser = userDetailsServiceImpl.getCurrentUserName();
+        User AuthorUser = task.getAuthor();
+
+        if (!Objects.equals(currentUser, AuthorUser))
         {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }

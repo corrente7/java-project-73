@@ -7,6 +7,7 @@ import hexlet.code.model.User;
 import hexlet.code.repository.TaskStatusRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class TaskStatusController {
                 .orElseThrow(() -> new NoSuchElementException("TaskStatus not found"));
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public TaskStatus createTaskStatus(@Valid @RequestBody TaskStatusDto taskStatusDto, @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -40,8 +42,8 @@ public class TaskStatusController {
         return taskStatusRepository.save(taskStatus);
     }
 
-    @PatchMapping(path = "/{id}")
-    public TaskStatus updateUser(@RequestBody TaskStatusDto taskStatusDto, @PathVariable long id) {
+    @PutMapping(path = "/{id}")
+    public TaskStatus updateTaskStatus(@RequestBody TaskStatusDto taskStatusDto, @PathVariable long id) {
         if (!taskStatusRepository.existsById(id)) {
             // Если не существует, возвращаем код ответа 404
             throw new NoSuchElementException("TaskStatus not found");
@@ -52,7 +54,8 @@ public class TaskStatusController {
         return taskStatusRepository.save(taskStatus);
     }
 
-    public void deleteUser(@PathVariable long id) {
+    @DeleteMapping(path = "/{id}")
+    public void deleteTaskStatus(@PathVariable long id) {
         if (!taskStatusRepository.existsById(id)) {
             // Если не существует, возвращаем код ответа 404
             throw new NoSuchElementException("TaskStatus not found");

@@ -3,10 +3,7 @@ package hexlet.code.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -18,6 +15,7 @@ import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 
 public class TaskStatus {
 

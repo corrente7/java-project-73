@@ -1,14 +1,14 @@
 package hexlet.code.service;
 
-import hexlet.code.exception.UserNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,12 +33,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         );
     }
 
-    public User getCurrentUserName(UserDetails userDetails) {
+    public User getCurrentUserName() {
 
-        String email = userDetails.getUsername();
-        User currentUser = userRepository.findUserByEmailIgnoreCase(email).get();
+        User currentUser = userRepository.findUserByEmailIgnoreCase(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
 
         return currentUser;
     }
 
+//    with @AuthenticationPrincipal UserDetails userDetails
+//    public User getCurrentUserName(UserDetails userDetails) {
+//
+//        String email = userDetails.getUsername();
+//
+//        return userRepository.findUserByEmailIgnoreCase(email).orElseThrow();
+//
+//    }
 }

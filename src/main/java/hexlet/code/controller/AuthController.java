@@ -13,26 +13,19 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api")
 public class AuthController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     AuthServiceImpl authServiceImpl;
 
 
-    @PostMapping(path = "/login")
+    @PostMapping(path = "/api/login")
 
-    ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginDto requestDto) {
-            return ResponseEntity.ok(authServiceImpl.authenticate(requestDto));
+    public String authUser(@Valid @RequestBody LoginDto requestDto) {
+        return authServiceImpl.authenticate(requestDto);
+
+//    ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginDto requestDto) {
+//            return ResponseEntity.ok(authServiceImpl.authenticate(requestDto));
  }
 
 

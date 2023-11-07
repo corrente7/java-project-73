@@ -1,11 +1,12 @@
 package hexlet.code;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import hexlet.code.dto.LoginDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.dto.UserDto;
+import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.JwtTokenUtil;
 import hexlet.code.util.TestUtils;
@@ -18,20 +19,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UsersTests {
+public class TaskStatusesTests {
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,11 +39,15 @@ public class UsersTests {
     private UserRepository userRepository;
 
     @Autowired
+    private TaskStatusRepository taskStatusRepository;
+    @Autowired
     private TestUtils testUtils;
 
     @Autowired
     private ObjectMapper om;
 
+
+    private TaskStatus testTaskStatus;
 
     private User testUser;
 
@@ -62,59 +65,55 @@ public class UsersTests {
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        testUser = Instancio.of(testUtils.getUserModel())
+        testTaskStatus = Instancio.of(testUtils.getTaskStatusModel())
                 .create();
-        userRepository.save(testUser);
-        token = jwtTokenUtil.generateToken(testUser);
+        taskStatusRepository.save(testTaskStatus);
+//        testUser = Instancio.of(testUtils.getUserModel())
+//                .create();
+//        userRepository.save(testUser);
+//        token = jwtTokenUtil.generateToken(testUser);
     }
 
 
     @Test
-    public void getUsersTest() throws Exception {
-        User testUser1 = Instancio.of(testUtils.getUserModel())
+    public void getTaskStatusesTest() throws Exception {
+        TaskStatus testTaskStatus1 = Instancio.of(testUtils.getTaskStatusModel())
                 .create();
-        userRepository.save(testUser1);
+        taskStatusRepository.save(testTaskStatus1);
         MockHttpServletResponse response = mockMvc
-                .perform(get(baseUrl + "/api/users"))
+                .perform(get(baseUrl + "/api/statuses"))
                 .andReturn()
                 .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getContentAsString()).contains(testUser.getFirstName());
-        assertThat(response.getContentAsString()).contains(testUser.getLastName());
-        assertThat(response.getContentAsString()).contains(testUser1.getFirstName());
-        assertThat(response.getContentAsString()).contains(testUser1.getLastName());
+        assertThat(response.getContentAsString()).contains(testTaskStatus.getName());
+        assertThat(response.getContentAsString()).contains(testTaskStatus1.getName());
 
     }
 
     @Test
-    public void getUserTest() throws Exception {
+    public void getTaskStatusTest() throws Exception {
 
-        Long id = testUser.getId();
+        Long id = testTaskStatus.getId();
 
         MockHttpServletResponse response = mockMvc
-                .perform(get(baseUrl + "/api/users/" + id)
-                        .header("Authorization", "Bearer " + token))
+                .perform(get(baseUrl + "/api/statuses/" + id))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getContentAsString()).contains(testUser.getFirstName());
-        assertThat(response.getContentAsString()).contains(testUser.getLastName());
-        assertThat(response.getContentAsString()).contains(testUser.getEmail());
+        assertThat(response.getContentAsString()).contains(testTaskStatus.getName());
     }
 
     @Test
-    public void createUserTest() throws Exception {
-        UserDto userDto = new UserDto();
-        userDto.setFirstName("Mark");
-        userDto.setLastName("Walker");
-        userDto.setEmail("mark@google.com");
-        userDto.setPassword("12345");
+    public void createTaskStatusTest() throws Exception {
+        TaskStatusDto testTaskStatusDto = new TaskStatusDto("New");
 
+// почему-то работает без авторизации, не пойму почему
         MockHttpServletResponse response = mockMvc
-                .perform(post(baseUrl + "/api/users")
+                .perform(post(baseUrl + "/api/statuses")
+                    //    .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(userDto)))
+                        .content(om.writeValueAsString(testTaskStatusDto)))
                 .andReturn()
                 .getResponse();
 
@@ -122,54 +121,50 @@ public class UsersTests {
         assertThat(response.getStatus()).isEqualTo(201);
 
         MockHttpServletResponse response1 = mockMvc
-                .perform(get(baseUrl + "/api/users"))
+                .perform(get(baseUrl + "/api/statuses"))
                 .andReturn()
                 .getResponse();
 
         assertThat(response1.getStatus()).isEqualTo(200);
         assertThat(response1.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response1.getContentAsString()).contains("Mark", "Walker", "mark@google.com");
+        assertThat(response1.getContentAsString()).contains("New");
     }
 
     @Test
-    public void updateUserTest() throws Exception {
+    public void updateTaskStatus() throws Exception {
 
-        Long id = testUser.getId();
-        UserDto userDto = new UserDto("user@gmail.com", "Mike", testUser.getLastName(), "666777");
+        Long id = testTaskStatus.getId();
+        TaskStatusDto testTaskStatusDto = new TaskStatusDto("Updated");
 
         MockHttpServletResponse response = mockMvc
-                .perform(put(baseUrl + "/api/users/" + id)
+                .perform(put(baseUrl + "/api/statuses/" + id)
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(userDto)))
+                        .content(om.writeValueAsString(testTaskStatusDto)))
                 .andReturn().getResponse();
 
-        assertNotNull(token);
 
         assertThat(response.getStatus()).isEqualTo(200);
 
         MockHttpServletResponse response1 = mockMvc
-                .perform(get(baseUrl + "/api/users/" + id)
-                        .header("Authorization", "Bearer " + token))
+                .perform(get(baseUrl + "/api/statuses/" + id))
                 .andReturn().getResponse();
 
-        assertThat(response1.getContentAsString()).contains("Mike");
-        assertThat(response.getContentAsString()).contains("user@gmail.com");
+        assertThat(response1.getContentAsString()).contains("Updated");
 
     }
 
     @Test
-    public void deleteUserTest() throws Exception {
+    public void deleteTaskStatus() throws Exception {
 
         MockHttpServletResponse response = mockMvc
-                .perform(delete(baseUrl + "/api/users/" + testUser.getId())
+                .perform(delete(baseUrl + "/api/statuses/" + testTaskStatus.getId())
                         .header("Authorization", "Bearer " + token)
                 )
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(userRepository.findById(testUser.getId())).isEmpty();
+        assertThat(userRepository.findById(testTaskStatus.getId())).isEmpty();
     }
-
 
 }

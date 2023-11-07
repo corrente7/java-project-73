@@ -1,11 +1,9 @@
 package hexlet.code.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -19,6 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "labels")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Label {
 
     @Id
@@ -31,10 +30,4 @@ public class Label {
     @CreationTimestamp
     private Date createdAt;
 
-    @ManyToMany
-    @JoinTable(name="label_task",
-            joinColumns = @JoinColumn(name="label_id", referencedColumnName="id"),
-            inverseJoinColumns = @JoinColumn(name="task_id", referencedColumnName="id")
-    )
-    private List<Task> tasks;
 }

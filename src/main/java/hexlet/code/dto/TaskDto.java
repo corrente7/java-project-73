@@ -3,9 +3,8 @@ package hexlet.code.dto;
 
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +23,8 @@ public class TaskDto {
 
     private String description;
 
-    @ManyToOne
-    private Long taskStatus;
+    @NotNull
+    private Long taskStatusId;
 
     private User executor;
 
