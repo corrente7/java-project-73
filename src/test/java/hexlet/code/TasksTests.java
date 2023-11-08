@@ -258,7 +258,7 @@ public class TasksTests {
         System.out.println(expected);
         assertThat(response.getStatus()).isEqualTo(200);
 
-//        assertThat(response.getContentAsString()).contains(testTask.getName());
+        assertThat(response.getContentAsString()).contains(testTask.getName());
 //        assertThat(response.getContentAsString()).contains(testTask1.getName());
 //        assertThat(response.getContentAsString()).contains(testTask1.getAuthor().getFirstName());
 
