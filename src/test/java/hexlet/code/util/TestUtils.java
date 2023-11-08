@@ -2,11 +2,16 @@ package hexlet.code.util;
 
 
 import hexlet.code.model.*;
+import hexlet.code.repository.LabelRepository;
+import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.instancio.Model;
 import org.instancio.Select;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -21,6 +26,18 @@ public class TestUtils {
     private Model<Task> taskModel;
 
     private Model<Label> labelModel;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
 
     @PostConstruct
@@ -48,6 +65,14 @@ public class TestUtils {
                 .toModel();
 
     }
+
+    public void clean() {
+        taskRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        labelRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     public Model<User> getUserModel() {
         return userModel;
     }

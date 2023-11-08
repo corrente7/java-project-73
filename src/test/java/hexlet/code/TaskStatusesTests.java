@@ -11,6 +11,7 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.util.JwtTokenUtil;
 import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,11 @@ public class TaskStatusesTests {
 //                .create();
 //        userRepository.save(testUser);
 //        token = jwtTokenUtil.generateToken(testUser);
+    }
+
+    @AfterEach
+    void clean() {
+        testUtils.clean();
     }
 
 

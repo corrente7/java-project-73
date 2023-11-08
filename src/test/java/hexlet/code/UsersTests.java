@@ -10,6 +10,7 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.util.JwtTokenUtil;
 import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,13 +62,16 @@ public class UsersTests {
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         testUser = Instancio.of(testUtils.getUserModel())
                 .create();
         userRepository.save(testUser);
         token = jwtTokenUtil.generateToken(testUser);
     }
 
+    @AfterEach
+    void clean() {
+        testUtils.clean();
+    }
 
     @Test
     public void getUsersTest() throws Exception {
@@ -82,8 +86,7 @@ public class UsersTests {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains(testUser.getFirstName());
         assertThat(response.getContentAsString()).contains(testUser.getLastName());
-        assertThat(response.getContentAsString()).contains(testUser1.getFirstName());
-        assertThat(response.getContentAsString()).contains(testUser1.getLastName());
+        assertThat(response.getContentAsString()).contains(testUser1.getFirstName());assertThat(response.getContentAsString()).contains(testUser1.getLastName());
 
     }
 

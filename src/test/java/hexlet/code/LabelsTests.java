@@ -19,6 +19,7 @@ import hexlet.code.util.JwtTokenUtil;
 import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
 import org.instancio.Select;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,10 @@ public class LabelsTests {
 
     }
 
+    @AfterEach
+    void clean() {
+        testUtils.clean();
+    }
 
     @Test
     public void getLabelsTest() throws Exception {

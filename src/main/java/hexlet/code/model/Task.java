@@ -42,7 +42,7 @@ public class Task {
     @CreationTimestamp
     private Date createdAt;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany (fetch = FetchType.EAGER)
     private List<Label> labels;
 
 
