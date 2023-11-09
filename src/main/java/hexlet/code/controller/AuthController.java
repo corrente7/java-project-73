@@ -2,6 +2,9 @@ package hexlet.code.controller;
 
 import hexlet.code.dto.LoginDto;
 import hexlet.code.service.AuthServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +19,10 @@ public class AuthController {
     @Autowired
     private AuthServiceImpl authServiceImpl;
 
+    @Operation(summary = "Log in user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Log in user")
+    })
 
     @PostMapping(path = "/api/login")
 

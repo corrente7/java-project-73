@@ -30,6 +30,10 @@ import java.util.Objects;
 
 import com.querydsl.core.types.Predicate;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -46,17 +50,30 @@ public class TaskController {
     @Autowired
     private TaskServiceImpl taskServiceImpl;
 
+    @Operation(summary = "Get all tasks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get list of tasks")
+    })
     @GetMapping(path = "")
     public List<Task> getTasks(@QuerydslPredicate (root = Task.class) Predicate predicate) {
         return predicate == null ? taskRepository.findAll() : taskRepository.findAll(predicate);
     }
 
+    @Operation(summary = "Get task by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get a specific task by id")
+    })
     @GetMapping(path = "/{id}")
     public Task getTask(@PathVariable long id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
     }
 
+    @Operation(summary = "Create new task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Task successfully created"),
+            @ApiResponse(responseCode = "422", description = "Data not valid")
+    })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public Task createTask(@Valid @RequestBody TaskDto taskDto) {
@@ -73,6 +90,11 @@ public class TaskController {
         return taskRepository.save(task);
     }
 
+    @Operation(summary = "Update task by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task successfully updated"),
+            @ApiResponse(responseCode = "422", description = "Data not valid")
+    })
     @PutMapping(path = "/{id}")
     public Task updateTask(@RequestBody TaskDto taskDto, @PathVariable long id) {
         if (!taskRepository.existsById(id)) {
@@ -89,6 +111,10 @@ public class TaskController {
         return taskRepository.save(task);
     }
 
+    @Operation(summary = "Delete task by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete task by id")
+    })
     @DeleteMapping(path = "/{id}")
     public void deleteTask(@PathVariable long id) {
         if (!taskRepository.existsById(id)) {

@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api/statuses")
 public class TaskStatusController {
@@ -27,17 +31,32 @@ public class TaskStatusController {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
+
+    @Operation(summary = "Get all task statuses")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get list of task statuses")
+    })
     @GetMapping(path = "")
     public List<TaskStatus> getTaskStatuses() {
         return taskStatusRepository.findAll();
     }
 
+
+    @Operation(summary = "Get task status by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get a specific task status by id")
+    })
     @GetMapping(path = "/{id}")
     public TaskStatus getTaskStatus(@PathVariable long id) {
         return taskStatusRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("TaskStatus not found"));
     }
 
+    @Operation(summary = "Create new task status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Task status successfully created"),
+            @ApiResponse(responseCode = "422", description = "Data not valid")
+    })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public TaskStatus createTaskStatus(@Valid @RequestBody TaskStatusDto taskStatusDto) {
@@ -47,6 +66,11 @@ public class TaskStatusController {
         return taskStatusRepository.save(taskStatus);
     }
 
+    @Operation(summary = "Update task status by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task status successfully updated"),
+            @ApiResponse(responseCode = "422", description = "Data not valid")
+    })
     @PutMapping(path = "/{id}")
     public TaskStatus updateTaskStatus(@RequestBody TaskStatusDto taskStatusDto, @PathVariable long id) {
         if (!taskStatusRepository.existsById(id)) {
@@ -58,6 +82,10 @@ public class TaskStatusController {
         return taskStatusRepository.save(taskStatus);
     }
 
+    @Operation(summary = "Delete task status by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete task status by id")
+    })
     @DeleteMapping(path = "/{id}")
     public void deleteTaskStatus(@PathVariable long id) {
         if (!taskStatusRepository.existsById(id)) {

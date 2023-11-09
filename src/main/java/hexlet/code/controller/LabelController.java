@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -26,11 +30,20 @@ public class LabelController {
     @Autowired
     private LabelRepository labelRepository;
 
+    @Operation(summary = "Get all labels")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get list of labels")
+    })
     @GetMapping(path = "")
     public List<Label> getLabels() {
         return labelRepository.findAll();
     }
 
+
+    @Operation(summary = "Get label by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get a specific label by id")
+    })
     @GetMapping(path = "/{id}")
     public Label getLabel(@PathVariable long id) {
         return labelRepository.findById(id)
@@ -38,6 +51,12 @@ public class LabelController {
     }
 
 
+
+    @Operation(summary = "Create new label")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Label successfully created"),
+            @ApiResponse(responseCode = "422", description = "Data not valid")
+    })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public Label createLabel(@Valid @RequestBody LabelDto labelDto) {
@@ -47,6 +66,11 @@ public class LabelController {
         return labelRepository.save(label);
     }
 
+    @Operation(summary = "Update label by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Label successfully updated"),
+            @ApiResponse(responseCode = "422", description = "Data not valid")
+    })
     @PutMapping(path = "/{id}")
     public Label updateLabel(@RequestBody LabelDto labelDto, @PathVariable long id) {
         if (!labelRepository.existsById(id)) {
@@ -59,10 +83,13 @@ public class LabelController {
         return labelRepository.save(label);
     }
 
+    @Operation(summary = "Delete label by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete label by id")
+    })
     @DeleteMapping(path = "/{id}")
     public void deleteLabel(@PathVariable long id) {
         if (!labelRepository.existsById(id)) {
-            // Если не существует, возвращаем код ответа 404
             throw new NoSuchElementException("Label not found");
         }
         labelRepository.deleteById(id);
