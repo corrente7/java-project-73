@@ -3,7 +3,6 @@ package hexlet.code;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import hexlet.code.dto.LoginDto;
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -21,7 +20,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -86,7 +84,8 @@ public class UsersTests {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains(testUser.getFirstName());
         assertThat(response.getContentAsString()).contains(testUser.getLastName());
-        assertThat(response.getContentAsString()).contains(testUser1.getFirstName());assertThat(response.getContentAsString()).contains(testUser1.getLastName());
+        assertThat(response.getContentAsString()).contains(testUser1.getFirstName());
+        assertThat(response.getContentAsString()).contains(testUser1.getLastName());
 
     }
 
@@ -173,6 +172,4 @@ public class UsersTests {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(userRepository.findById(testUser.getId())).isEmpty();
     }
-
-
 }

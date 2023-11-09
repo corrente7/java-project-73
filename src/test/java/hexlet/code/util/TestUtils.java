@@ -1,7 +1,11 @@
 package hexlet.code.util;
 
 
-import hexlet.code.model.*;
+import hexlet.code.model.Task;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
+import hexlet.code.model.Label;
+import hexlet.code.model.UserRole;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
@@ -65,7 +69,6 @@ public class TestUtils {
                 .toModel();
 
     }
-
     public void clean() {
         taskRepository.deleteAll();
         taskStatusRepository.deleteAll();

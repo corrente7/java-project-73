@@ -1,11 +1,8 @@
 package hexlet.code.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.repository.UserRepository;
-import hexlet.code.service.UserDetailsServiceImpl;
 import hexlet.code.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,27 +30,28 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final ObjectMapper mapper;
 
     @Override
-    protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                     FilterChain filterChain) throws ServletException, IOException {
         Map<String, Object> errorDetails = new HashMap<>();
 
         try {
             String accessToken = jwtUtil.resolveToken(request);
-            if (accessToken == null ) {
+            if (accessToken == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
             System.out.println("token : " + accessToken);
             Claims claims = jwtUtil.resolveClaims(request);
 
-            if (claims != null & jwtUtil.validateClaims(claims)){
+            if (claims != null & jwtUtil.validateClaims(claims)) {
                 String email = claims.getSubject();
                 System.out.println("email : " + email);
                 Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(email,"", new ArrayList<>());
+                        new UsernamePasswordAuthenticationToken(email, "", new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             errorDetails.put("message", "Authentication Error");
             errorDetails.put("details", e.getMessage());
             response.setStatus(HttpStatus.FORBIDDEN.value());

@@ -13,10 +13,16 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -55,7 +61,7 @@ public class TaskController {
     @PostMapping(path = "")
     public Task createTask(@Valid @RequestBody TaskDto taskDto) {
 
-        List <Label> labels = taskServiceImpl.addLabels(taskDto);
+        List<Label> labels = taskServiceImpl.addLabels(taskDto);
 
         Task task = new Task();
         task.setName(taskDto.getName());
@@ -70,12 +76,11 @@ public class TaskController {
     @PutMapping(path = "/{id}")
     public Task updateTask(@RequestBody TaskDto taskDto, @PathVariable long id) {
         if (!taskRepository.existsById(id)) {
-            // Если не существует, возвращаем код ответа 404
             throw new NoSuchElementException("Task not found");
         }
         Task task = taskRepository.findById(id).get();
 
-        List <Label> labels = taskServiceImpl.addLabels(taskDto);
+        List<Label> labels = taskServiceImpl.addLabels(taskDto);
 
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
@@ -93,10 +98,9 @@ public class TaskController {
         Task task = taskRepository.findById(id).orElseThrow();
 
         User currentUser = userDetailsServiceImpl.getCurrentUserName();
-        User AuthorUser = task.getAuthor();
+        User authorUser = task.getAuthor();
 
-        if (!Objects.equals(currentUser, AuthorUser))
-        {
+        if (!Objects.equals(currentUser, authorUser)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         taskRepository.deleteById(id);

@@ -1,12 +1,8 @@
 package hexlet.code;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import hexlet.code.dto.LabelDto;
-import hexlet.code.dto.LoginDto;
-import hexlet.code.dto.TaskDto;
-import hexlet.code.dto.UserDto;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
@@ -18,7 +14,6 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.util.JwtTokenUtil;
 import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
-import org.instancio.Select;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -195,6 +190,4 @@ public class LabelsTests {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(labelRepository.findById(testLabel.getId())).isEmpty();
     }
-
-
 }

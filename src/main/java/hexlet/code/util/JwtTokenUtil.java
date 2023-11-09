@@ -1,12 +1,15 @@
 package hexlet.code.util;
 
 import hexlet.code.model.User;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
@@ -22,18 +25,16 @@ public class JwtTokenUtil {
 
     private String secretString;
 
-
-    private long accessTokenValidity = 60*60*1000;
+    private long accessTokenValidity = 60 * 60 * 1000;
 
     private final JwtParser jwtParser;
 
-    private final String TOKEN_HEADER = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer ";
+    private static final String TOKEN_HEADER = "Authorization";
+    private static final String TOKEN_PREFIX = "Bearer ";
     private String secretKey = "793D494F99F601B3AD414EDD2A4E211367828B78D6B6B89C56497FC244EE2C6D";
 
 
-
-    public JwtTokenUtil(){
+    public JwtTokenUtil() {
 
         this.jwtParser = Jwts.parser().setSigningKey(secretKey);
         //this.jwtParser = Jwts.parser().setSigningKey(getSecretKey());
@@ -103,7 +104,6 @@ public class JwtTokenUtil {
         }
     }
 
-
 //    public String getEmail(Claims claims) {
 //        return claims.getSubject();
 //    }
@@ -111,6 +111,5 @@ public class JwtTokenUtil {
 //    private List<String> getRoles(Claims claims) {
 //        return (List<String>) claims.get("roles");
 //    }
-
 
 }

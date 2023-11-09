@@ -9,7 +9,16 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 
 import java.util.List;
 
@@ -50,7 +59,6 @@ public class UserController {
     @PutMapping(path = "/{id}")
     public User updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Long id) {
         if (!userRepository.existsById(id)) {
-            // Если не существует, возвращаем код ответа 404
             throw new UserNotFoundException("User" + id + "not found");
         }
         User user = userRepository.findById(id).get();

@@ -2,7 +2,6 @@ package hexlet.code.config;
 
 import hexlet.code.component.JwtAuthenticationEntryPoint;
 import hexlet.code.component.JwtTokenFilter;
-import hexlet.code.model.UserRole;
 import hexlet.code.service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +11,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-
-import static org.springframework.http.HttpMethod.*;
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -42,7 +33,6 @@ public class SecurityConfig  {
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -71,7 +61,8 @@ public class SecurityConfig  {
     }
 
 //    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+//    public SecurityFilterChain filterChain(HttpSecurity http,
+//    HandlerMappingIntrospector introspector) throws Exception {
 //        var mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 //        return http
 //                .csrf(csrf -> csrf.disable())
@@ -92,8 +83,10 @@ public class SecurityConfig  {
 ////
 //                        .anyRequest().authenticated())
 ////
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                .sessionManagement(session -> session.sessionCreationPolicy
+//                (SessionCreationPolicy.STATELESS))
+//                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint
+//                (jwtAuthenticationEntryPoint)
 //                )
 //                .addFilterBefore(
 //                jwtTokenFilter,
@@ -108,7 +101,8 @@ public class SecurityConfig  {
 //    @Bean
 //    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder)
 //            throws Exception {
-//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject
+//        (AuthenticationManagerBuilder.class);
 //        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 //        return authenticationManagerBuilder.build();
 //    }
@@ -136,9 +130,8 @@ public class SecurityConfig  {
         return config.getAuthenticationManager();
     }
 
-
-
 }
+
 
 
 

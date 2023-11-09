@@ -1,22 +1,20 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.LoginDto;
-import hexlet.code.repository.UserRepository;
 import hexlet.code.service.AuthServiceImpl;
-import hexlet.code.util.JwtTokenUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
 public class AuthController {
 
     @Autowired
-    AuthServiceImpl authServiceImpl;
+    private AuthServiceImpl authServiceImpl;
 
 
     @PostMapping(path = "/api/login")
@@ -28,9 +26,6 @@ public class AuthController {
 //            return ResponseEntity.ok(authServiceImpl.authenticate(requestDto));
  }
 
-
-
-
 //        } catch (DisabledException e) {
 //            return new ResponseEntity<>("USER_DISABLED" + e.getMessage(), HttpStatus.BAD_REQUEST);
 //        } catch (BadCredentialsException e) {
@@ -39,7 +34,5 @@ public class AuthController {
 //            throw new RuntimeException(e);
 //        }
 
-
-
-
 }
+

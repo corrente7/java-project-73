@@ -3,14 +3,19 @@ package hexlet.code.controller;
 
 import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.model.TaskStatus;
-import hexlet.code.model.User;
 import hexlet.code.repository.TaskStatusRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,7 +40,7 @@ public class TaskStatusController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
-    public TaskStatus createTaskStatus(@Valid @RequestBody TaskStatusDto taskStatusDto, @AuthenticationPrincipal UserDetails userDetails) {
+    public TaskStatus createTaskStatus(@Valid @RequestBody TaskStatusDto taskStatusDto) {
 
         TaskStatus taskStatus = new TaskStatus();
         taskStatus.setName(taskStatusDto.getName());
@@ -45,7 +50,6 @@ public class TaskStatusController {
     @PutMapping(path = "/{id}")
     public TaskStatus updateTaskStatus(@RequestBody TaskStatusDto taskStatusDto, @PathVariable long id) {
         if (!taskStatusRepository.existsById(id)) {
-            // Если не существует, возвращаем код ответа 404
             throw new NoSuchElementException("TaskStatus not found");
         }
         TaskStatus taskStatus = taskStatusRepository.findById(id).get();
@@ -57,7 +61,6 @@ public class TaskStatusController {
     @DeleteMapping(path = "/{id}")
     public void deleteTaskStatus(@PathVariable long id) {
         if (!taskStatusRepository.existsById(id)) {
-            // Если не существует, возвращаем код ответа 404
             throw new NoSuchElementException("TaskStatus not found");
         }
         taskStatusRepository.deleteById(id);
