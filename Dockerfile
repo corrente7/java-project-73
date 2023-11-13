@@ -1,6 +1,6 @@
 FROM eclipse-temurin:20-jdk
 
-ARG GRADLE_VERSION=8.2
+ARG GRADLE_VERSION=8.3
 
 RUN apt-get update && apt-get install -yq make unzip
 
@@ -16,6 +16,9 @@ ENV PATH=$PATH:$GRADLE_HOME/bin
 
 COPY ./ .
 
-RUN gradle stage
+RUN ./gradlew --no-daemon build
 
-CMD build/install/app/bin/app
+ENV JAVA_OPTS "-Xmx512M -Xms512M"
+EXPOSE 8080
+
+CMD java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
