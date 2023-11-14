@@ -13,4 +13,9 @@ public class WelcomeController {
     String welcome() {
         return "Welcome to Spring";
     }
+
+    @GetMapping("/")
+    public String index() {
+        return "";
+    }
 }
