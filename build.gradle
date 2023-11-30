@@ -112,7 +112,7 @@ jacocoTestReport {
 }
 
 application {
-	mainClass = 'hexlet.code.Application'
+	mainClass = 'hexlet.code.AppApplication'
 }
 
 frontend {
