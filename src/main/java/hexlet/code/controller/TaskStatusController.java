@@ -34,7 +34,7 @@ public class TaskStatusController {
 
     @Operation(summary = "Get all task statuses")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get list of task statuses")
+        @ApiResponse(responseCode = "200", description = "Get list of task statuses")
     })
     @GetMapping(path = "")
     public List<TaskStatus> getTaskStatuses() {
@@ -44,7 +44,7 @@ public class TaskStatusController {
 
     @Operation(summary = "Get task status by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get a specific task status by id")
+        @ApiResponse(responseCode = "200", description = "Get a specific task status by id")
     })
     @GetMapping(path = "/{id}")
     public TaskStatus getTaskStatus(@PathVariable long id) {
@@ -54,8 +54,8 @@ public class TaskStatusController {
 
     @Operation(summary = "Create new task status")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Task status successfully created"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "201", description = "Task status successfully created"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
@@ -68,8 +68,8 @@ public class TaskStatusController {
 
     @Operation(summary = "Update task status by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Task status successfully updated"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "200", description = "Task status successfully updated"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @PutMapping(path = "/{id}")
     public TaskStatus updateTaskStatus(@RequestBody TaskStatusDto taskStatusDto, @PathVariable long id) {
@@ -84,7 +84,7 @@ public class TaskStatusController {
 
     @Operation(summary = "Delete task status by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Delete task status by id")
+        @ApiResponse(responseCode = "200", description = "Delete task status by id")
     })
     @DeleteMapping(path = "/{id}")
     public void deleteTaskStatus(@PathVariable long id) {

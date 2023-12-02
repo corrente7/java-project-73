@@ -21,7 +21,7 @@ public class AuthController {
 
     @Operation(summary = "Log in user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Log in user")
+        @ApiResponse(responseCode = "200", description = "Log in user")
     })
 
     @PostMapping(path = "/api/login")

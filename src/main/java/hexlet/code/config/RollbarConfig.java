@@ -14,7 +14,7 @@ import static com.rollbar.spring.webmvc.RollbarSpringConfigBuilder.withAccessTok
 @EnableWebMvc
 @ComponentScan({
         // ADD YOUR PROJECT PACKAGE HERE
-        "hexlet.code"
+    "hexlet.code"
 })
 
 public class RollbarConfig {

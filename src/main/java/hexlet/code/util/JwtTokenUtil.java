@@ -45,7 +45,7 @@ public class JwtTokenUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-        private String getSecretKey() {
+    private String getSecretKey() {
         SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         secretString = Encoders.BASE64.encode(key.getEncoded());
         return secretString;

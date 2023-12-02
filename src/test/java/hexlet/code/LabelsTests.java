@@ -106,7 +106,7 @@ public class LabelsTests {
                 .andReturn()
                 .getResponse();
 
-               assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains(testLabel.getName());
 
     }

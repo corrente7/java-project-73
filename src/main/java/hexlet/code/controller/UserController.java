@@ -44,7 +44,7 @@ public class UserController {
 
     @Operation(summary = "Get all users")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get list of all users")
+        @ApiResponse(responseCode = "200", description = "Get list of all users")
     })
     @GetMapping(path = "")
     public List<User> getUsers() {
@@ -53,7 +53,7 @@ public class UserController {
 
     @Operation(summary = "Get user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get a specific user by id")
+        @ApiResponse(responseCode = "200", description = "Get a specific user by id")
     })
     @GetMapping(path = "/{id}")
     public User getUser(@PathVariable long id) {
@@ -63,8 +63,8 @@ public class UserController {
 
     @Operation(summary = "Create new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User successfully created"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "201", description = "User successfully created"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
@@ -81,8 +81,8 @@ public class UserController {
 
     @Operation(summary = "Update user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User successfully updated"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "200", description = "User successfully updated"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @PutMapping(path = "/{id}")
     public User updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Long id) {
@@ -107,7 +107,7 @@ public class UserController {
 
     @Operation(summary = "Delete user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Delete user by id")
+        @ApiResponse(responseCode = "200", description = "Delete user by id")
     })
     @DeleteMapping(path = "/{id}")
     public void deleteUser(@PathVariable long id) {

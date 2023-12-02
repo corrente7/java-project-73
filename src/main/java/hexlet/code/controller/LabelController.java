@@ -32,7 +32,7 @@ public class LabelController {
 
     @Operation(summary = "Get all labels")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get list of labels")
+        @ApiResponse(responseCode = "200", description = "Get list of labels")
     })
     @GetMapping(path = "")
     public List<Label> getLabels() {
@@ -42,7 +42,7 @@ public class LabelController {
 
     @Operation(summary = "Get label by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get a specific label by id")
+        @ApiResponse(responseCode = "200", description = "Get a specific label by id")
     })
     @GetMapping(path = "/{id}")
     public Label getLabel(@PathVariable long id) {
@@ -54,8 +54,8 @@ public class LabelController {
 
     @Operation(summary = "Create new label")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Label successfully created"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "201", description = "Label successfully created"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
@@ -68,8 +68,8 @@ public class LabelController {
 
     @Operation(summary = "Update label by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Label successfully updated"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "200", description = "Label successfully updated"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @PutMapping(path = "/{id}")
     public Label updateLabel(@RequestBody LabelDto labelDto, @PathVariable long id) {
@@ -85,7 +85,7 @@ public class LabelController {
 
     @Operation(summary = "Delete label by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Delete label by id")
+        @ApiResponse(responseCode = "200", description = "Delete label by id")
     })
     @DeleteMapping(path = "/{id}")
     public void deleteLabel(@PathVariable long id) {

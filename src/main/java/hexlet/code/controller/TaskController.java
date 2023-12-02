@@ -53,7 +53,7 @@ public class TaskController {
 
     @Operation(summary = "Get all tasks")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get list of tasks")
+        @ApiResponse(responseCode = "200", description = "Get list of tasks")
     })
     @GetMapping(path = "")
     public List<Task> getTasks(@QuerydslPredicate (root = Task.class) Predicate predicate) {
@@ -62,7 +62,7 @@ public class TaskController {
 
     @Operation(summary = "Get task by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get a specific task by id")
+        @ApiResponse(responseCode = "200", description = "Get a specific task by id")
     })
     @GetMapping(path = "/{id}")
     public Task getTask(@PathVariable long id) {
@@ -72,8 +72,8 @@ public class TaskController {
 
     @Operation(summary = "Create new task")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Task successfully created"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "201", description = "Task successfully created"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
@@ -93,8 +93,8 @@ public class TaskController {
 
     @Operation(summary = "Update task by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Task successfully updated"),
-            @ApiResponse(responseCode = "422", description = "Data not valid")
+        @ApiResponse(responseCode = "200", description = "Task successfully updated"),
+        @ApiResponse(responseCode = "422", description = "Data not valid")
     })
     @PutMapping(path = "/{id}")
     public Task updateTask(@RequestBody TaskDto taskDto, @PathVariable long id) {
@@ -114,7 +114,7 @@ public class TaskController {
 
     @Operation(summary = "Delete task by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Delete task by id")
+        @ApiResponse(responseCode = "200", description = "Delete task by id")
     })
     @DeleteMapping(path = "/{id}")
     public void deleteTask(@PathVariable long id) {
