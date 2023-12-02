@@ -31,7 +31,7 @@ public class AuthController {
 
 //    ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginDto requestDto) {
 //            return ResponseEntity.ok(authServiceImpl.authenticate(requestDto));
- }
+    }
 
 //        } catch (DisabledException e) {
 //            return new ResponseEntity<>("USER_DISABLED" + e.getMessage(), HttpStatus.BAD_REQUEST);
