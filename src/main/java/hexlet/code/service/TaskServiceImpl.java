@@ -6,8 +6,8 @@ import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,15 +19,15 @@ public class TaskServiceImpl {
     @Autowired
     private TaskRepository taskRepository;
 
-    public List<Label> addLabels(TaskDto taskDto) {
+    public Set<Label> addLabels(TaskDto taskDto) {
 
-        List<Label> labels = new ArrayList<>();
+        Set<Label> labels = labelRepository.findByIdIn(taskDto.getLabelIds());
 
-        if (taskDto.getLabelsIds() != null) {
-            for (Long labelId : taskDto.getLabelsIds()) {
-                labels.add(labelRepository.findById(labelId).orElseThrow());
-            }
-        }
+//        if (taskDto.getLabelsIds() != null) {
+//            for (Long labelId : taskDto.getLabelsIds()) {
+//                labels.add(labelRepository.findById(labelId).orElseThrow());
+//            }
+//        }
         return labels;
 
     }

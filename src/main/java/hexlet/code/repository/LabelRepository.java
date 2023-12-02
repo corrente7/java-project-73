@@ -5,10 +5,11 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface LabelRepository extends CrudRepository<Label, Long> {
 
     Optional<Label> findById(long id);
-
+    Set<Label> findByIdIn(Set<Long> id);
     List<Label> findAll();
 }

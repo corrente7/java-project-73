@@ -15,3 +15,5 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: none
+rollbar:
+  token: ${ROLLBAR_TOKEN}

@@ -29,9 +29,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -108,7 +109,7 @@ public class TasksTests {
                 .set(Select.field(Task::getAuthor), testUser)
                 .set(Select.field(Task::getExecutor), testUser)
                 .set(Select.field(Task::getTaskStatus),  testTaskStatus)
-                .set(Select.field(Task::getLabels),  List.of(testLabel1, testLabel2))
+                .set(Select.field(Task::getLabels),  Set.of(testLabel1, testLabel2))
                 .create();
         taskRepository.save(testTask);
 
@@ -159,7 +160,7 @@ public class TasksTests {
         taskDto.setDescription("Edit text with comments");
         taskDto.setExecutor(testUser);
         taskDto.setTaskStatusId(testTaskStatus.getId());
-        taskDto.setLabelsIds(new ArrayList<>());
+        taskDto.setLabelIds(new HashSet<>());
 
         MockHttpServletResponse response = mockMvc
                 .perform(post(baseUrl + "/api/tasks")
@@ -191,7 +192,7 @@ public class TasksTests {
         taskDto.setDescription("Edit text with comments");
         taskDto.setExecutor(testUser);
         taskDto.setTaskStatusId(testTaskStatus.getId());
-        taskDto.setLabelsIds(new ArrayList<>());
+        taskDto.setLabelIds(new HashSet<>());
 
         MockHttpServletResponse response = mockMvc
                 .perform(put(baseUrl + "/api/tasks/" + id)
@@ -232,7 +233,7 @@ public class TasksTests {
                 .set(Select.field(Task::getAuthor), testUser)
                 .set(Select.field(Task::getExecutor), testUser)
                 .set(Select.field(Task::getTaskStatus),  testTaskStatus)
-                .set(Select.field(Task::getLabels),  List.of(testLabel1, testLabel2))
+                .set(Select.field(Task::getLabels),  Set.of(testLabel1, testLabel2))
                 .create();
 
         taskRepository.save(testTask1);

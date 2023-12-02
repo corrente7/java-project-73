@@ -17,7 +17,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -53,7 +53,7 @@ public class Task {
     private Date createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Label> labels;
+    private Set<Label> labels;
 
 
 }

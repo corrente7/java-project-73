@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 import com.querydsl.core.types.Predicate;
 
@@ -78,7 +79,7 @@ public class TaskController {
     @PostMapping(path = "")
     public Task createTask(@Valid @RequestBody TaskDto taskDto) {
 
-        List<Label> labels = taskServiceImpl.addLabels(taskDto);
+        Set<Label> labels = taskServiceImpl.addLabels(taskDto);
 
         Task task = new Task();
         task.setName(taskDto.getName());
@@ -102,7 +103,7 @@ public class TaskController {
         }
         Task task = taskRepository.findById(id).get();
 
-        List<Label> labels = taskServiceImpl.addLabels(taskDto);
+        Set<Label> labels = taskServiceImpl.addLabels(taskDto);
 
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
