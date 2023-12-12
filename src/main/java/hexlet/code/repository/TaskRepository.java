@@ -15,6 +15,8 @@ public interface TaskRepository extends CrudRepository<Task, Long>,
 
     Optional<Task> findById(long id);
 
+    Optional<Task> findByName(String name);
+
     List<Task> findAll(Predicate predicate);
     List<Task> findAll();
 

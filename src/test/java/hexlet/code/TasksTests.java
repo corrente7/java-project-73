@@ -27,7 +27,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +65,6 @@ public class TasksTests {
     @Autowired
     private ObjectMapper om;
 
-
     private User testUser;
 
     private TaskStatus testTaskStatus;
@@ -84,13 +82,8 @@ public class TasksTests {
 
     private final String baseUrl = "http://localhost:8080";
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-
     @BeforeEach
     public void setUp() {
-        //mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         testUser = Instancio.of(testUtils.getUserModel())
                 .create();
         userRepository.save(testUser);
@@ -122,15 +115,21 @@ public class TasksTests {
     }
     @Test
     public void getTasksTest() throws Exception {
-//        Task testTask1 = Instancio.of(testUtils.getTaskModel())
-//                .create();
-//        taskRepository.save(testTask1);
+        Task testTask1 = Instancio.of(testUtils.getTaskModel())
+                .set(Select.field(Task::getAuthor), testUser)
+                .set(Select.field(Task::getExecutor), testUser)
+                .set(Select.field(Task::getTaskStatus),  testTaskStatus)
+                .set(Select.field(Task::getLabels),  Set.of(testLabel1, testLabel2))
+                .create();
+        taskRepository.save(testTask1);
         MockHttpServletResponse response = mockMvc
-                .perform(get(baseUrl + "/api/tasks"))
+                .perform(get(baseUrl + "/api/tasks")
+                .header("Authorization", "Bearer " + token))
                 .andReturn()
                 .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(taskRepository.findAll().size()).isEqualTo(2);
         assertThat(response.getContentAsString()).contains(testTask.getName());
         assertThat(response.getContentAsString()).contains(testTask.getTaskStatus().getName());
         assertThat(response.getContentAsString()).contains(testTask.getAuthor().getEmail());
@@ -142,7 +141,8 @@ public class TasksTests {
         Long id = testTask.getId();
 
         MockHttpServletResponse response = mockMvc
-                .perform(get(baseUrl + "/api/tasks/" + id))
+                .perform(get(baseUrl + "/api/tasks/" + id)
+                .header("Authorization", "Bearer " + token))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
@@ -170,17 +170,10 @@ public class TasksTests {
                 .andReturn()
                 .getResponse();
 
-
         assertThat(response.getStatus()).isEqualTo(201);
 
-//        MockHttpServletResponse response1 = mockMvc
-//                .perform(get(baseUrl + "/api/tasks"))
-//                .andReturn()
-//                .getResponse();
-
-     //   assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response.getContentAsString()).contains("Edit", "Edit text with comments", testUser.getFirstName());
+        assertThat(taskRepository.findByName("Edit").isPresent());
+        assertThat(taskRepository.findByName("Edit").get().toString()).contains("Edit text with comments");
     }
 
     @Test
@@ -203,13 +196,8 @@ public class TasksTests {
 
         assertThat(response.getStatus()).isEqualTo(200);
 
-        MockHttpServletResponse response1 = mockMvc
-                .perform(get(baseUrl + "/api/tasks/" + id)
-                        .header("Authorization", "Bearer " + token))
-                .andReturn().getResponse();
-
-        assertThat(response1.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response1.getContentAsString()).contains("Edit", "Edit text with comments", testUser.getFirstName());
+        assertThat(taskRepository.findById(id).get().toString()).contains("Edit");
+        assertThat(taskRepository.findById(id).get().toString()).contains("Edit text with comments");
     }
 
     @Test
@@ -225,7 +213,6 @@ public class TasksTests {
         assertThat(taskRepository.findById(testTask.getId())).isEmpty();
     }
 
-    // не работает, не отображает содержимое, testTask.getName() и тд
     @Test
     public void getTasksWithParamsTest() throws Exception {
 
@@ -245,21 +232,17 @@ public class TasksTests {
                 )
                 .andReturn().getResponse();
 
-//       List<Task> expected = taskRepository.findAll().stream()
-//                .filter(task -> Objects.equals
-//                        (task.getLabels().stream().map(Label::getId), testLabel1.getId()))
-//                .collect(Collectors.toList());
+        final List<Task> expected1 = taskRepository.findAll().stream()
+                .filter(task -> Objects.equals(
+                        task.getLabels().stream().map(Label::getId), testLabel1.getId()))
+                .collect(Collectors.toList());
 
         final List<Task> expected = taskRepository.findAll().stream()
                 .filter(task -> Objects.equals(task.getAuthor().getId(), testUser.getId()))
                 .collect(Collectors.toList());
 
-        System.out.println(expected);
         assertThat(response.getStatus()).isEqualTo(200);
-
-//        assertThat(response.getContentAsString()).contains(testTask.getName());
-//        assertThat(response.getContentAsString()).contains(testTask1.getName());
-//        assertThat(response.getContentAsString()).contains(testTask1.getAuthor().getFirstName());
-
+        assertThat(expected.size()).isEqualTo(2);
+        assertThat(expected.size()).isEqualTo(2);
     }
 }

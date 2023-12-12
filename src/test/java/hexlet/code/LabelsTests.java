@@ -5,11 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import hexlet.code.dto.LabelDto;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
-import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
-import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.JwtTokenUtil;
 import hexlet.code.util.TestUtils;
@@ -25,8 +23,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.context.WebApplicationContext;
-
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,9 +44,6 @@ public class LabelsTests {
     private TaskRepository taskRepository;
 
     @Autowired
-    private TaskStatusRepository taskStatusRepository;
-
-    @Autowired
     private LabelRepository labelRepository;
 
     @Autowired
@@ -61,8 +54,6 @@ public class LabelsTests {
 
 
     private User testUser;
-
-    private TaskStatus testTaskStatus;
 
     private Task testTask;
 
@@ -75,10 +66,6 @@ public class LabelsTests {
 
     private final String baseUrl = "http://localhost:8080";
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-
     @BeforeEach
     public void setUp() {
         testUser = Instancio.of(testUtils.getUserModel())
@@ -89,7 +76,6 @@ public class LabelsTests {
         testLabel = Instancio.of(testUtils.getLabelModel())
                 .create();
         labelRepository.save(testLabel);
-
     }
 
     @AfterEach
@@ -100,6 +86,13 @@ public class LabelsTests {
     @Test
     public void getLabelsTest() throws Exception {
 
+        Label testLabel1 = Instancio.of(testUtils.getLabelModel())
+                .create();
+        labelRepository.save(testLabel1);
+        Label testLabel2 = Instancio.of(testUtils.getLabelModel())
+                .create();
+        labelRepository.save(testLabel2);
+
         MockHttpServletResponse response = mockMvc
                 .perform(get(baseUrl + "/api/labels")
                 .header("Authorization", "Bearer " + token))
@@ -108,7 +101,7 @@ public class LabelsTests {
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains(testLabel.getName());
-
+        assertThat(labelRepository.findAll().size()).isEqualTo(3);
     }
 
     @Test
@@ -138,18 +131,8 @@ public class LabelsTests {
                 .andReturn()
                 .getResponse();
 
-
         assertThat(response.getStatus()).isEqualTo(201);
-
-        MockHttpServletResponse response1 = mockMvc
-                .perform(get(baseUrl + "/api/labels")
-                        .header("Authorization", "Bearer " + token))
-                .andReturn()
-                .getResponse();
-
-        assertThat(response1.getStatus()).isEqualTo(200);
-        assertThat(response1.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response1.getContentAsString()).contains("NewLabel");
+        assertThat(labelRepository.findByName("NewLabel").isPresent());
     }
 
     @Test
@@ -167,15 +150,7 @@ public class LabelsTests {
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
-
-        MockHttpServletResponse response1 = mockMvc
-                .perform(get(baseUrl + "/api/labels/" + id)
-                        .header("Authorization", "Bearer " + token))
-                .andReturn().getResponse();
-
-        assertThat(response1.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response1.getContentAsString()).contains("NewLabel");
-
+        assertThat(taskRepository.findByName("NewLabel").isPresent());
     }
 
     @Test

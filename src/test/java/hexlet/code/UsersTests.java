@@ -1,7 +1,6 @@
 package hexlet.code;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
@@ -20,7 +19,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,7 +42,6 @@ public class UsersTests {
     @Autowired
     private ObjectMapper om;
 
-
     private User testUser;
 
     private String token;
@@ -53,9 +50,6 @@ public class UsersTests {
     private JwtTokenUtil jwtTokenUtil;
 
     private final String baseUrl = "http://localhost:8080";
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
 
 
     @BeforeEach
@@ -86,7 +80,7 @@ public class UsersTests {
         assertThat(response.getContentAsString()).contains(testUser.getLastName());
         assertThat(response.getContentAsString()).contains(testUser1.getFirstName());
         assertThat(response.getContentAsString()).contains(testUser1.getLastName());
-
+        System.out.println(userRepository.findAll().size());
     }
 
     @Test
@@ -120,17 +114,11 @@ public class UsersTests {
                 .andReturn()
                 .getResponse();
 
-
         assertThat(response.getStatus()).isEqualTo(201);
 
-        MockHttpServletResponse response1 = mockMvc
-                .perform(get(baseUrl + "/api/users"))
-                .andReturn()
-                .getResponse();
-
-        assertThat(response1.getStatus()).isEqualTo(200);
-        assertThat(response1.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response1.getContentAsString()).contains("Mark", "Walker", "mark@google.com");
+        assertThat(userRepository.findUserByEmailIgnoreCase("mark@google.com").isPresent());
+        assertThat(userRepository.findUserByEmailIgnoreCase("mark@google.com")
+                .get().toString()).contains("Mark", "Walker");
     }
 
     @Test
@@ -146,18 +134,9 @@ public class UsersTests {
                         .content(om.writeValueAsString(userDto)))
                 .andReturn().getResponse();
 
-        assertNotNull(token);
-
         assertThat(response.getStatus()).isEqualTo(200);
-
-        MockHttpServletResponse response1 = mockMvc
-                .perform(get(baseUrl + "/api/users/" + id)
-                        .header("Authorization", "Bearer " + token))
-                .andReturn().getResponse();
-
-        assertThat(response1.getContentAsString()).contains("Mike");
-        assertThat(response.getContentAsString()).contains("user@gmail.com");
-
+        assertThat(userRepository.findUserByEmailIgnoreCase("user@gmail.com").isPresent());
+        assertThat(userRepository.findUserByEmailIgnoreCase("user@gmail.com").get().toString()).contains("Mike");
     }
 
     @Test

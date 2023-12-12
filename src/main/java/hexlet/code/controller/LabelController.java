@@ -51,7 +51,6 @@ public class LabelController {
     }
 
 
-
     @Operation(summary = "Create new label")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Label successfully created"),
@@ -82,7 +81,6 @@ public class LabelController {
         label.setName(labelDto.getName());
         return labelRepository.save(label);
     }
-
     @Operation(summary = "Delete label by id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Delete label by id")

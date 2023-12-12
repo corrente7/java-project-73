@@ -37,7 +37,6 @@ public class JwtTokenUtil {
     public JwtTokenUtil() {
 
         this.jwtParser = Jwts.parser().setSigningKey(secretKey);
-        //this.jwtParser = Jwts.parser().setSigningKey(getSecretKey());
     }
 
     private Key getSignKey() {
@@ -61,7 +60,6 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(tokenValidity)
-                //.signWith(SignatureAlgorithm.HS256, getSecretKey())
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -103,13 +101,4 @@ public class JwtTokenUtil {
             throw e;
         }
     }
-
-//    public String getEmail(Claims claims) {
-//        return claims.getSubject();
-//    }
-//
-//    private List<String> getRoles(Claims claims) {
-//        return (List<String>) claims.get("roles");
-//    }
-
 }

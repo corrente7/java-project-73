@@ -41,12 +41,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return currentUser;
     }
 
-//    with @AuthenticationPrincipal UserDetails userDetails
-//    public User getCurrentUserName(UserDetails userDetails) {
-//
-//        String email = userDetails.getUsername();
-//
-//        return userRepository.findUserByEmailIgnoreCase(email).orElseThrow();
-//
-//    }
 }

@@ -47,7 +47,6 @@ public class AuthTests {
         userRepository.save(testUser);
     }
 
-
     @Test
     public void loginUserTest() throws Exception {
         LoginDto credentials = new LoginDto(testUser.getEmail(), testUser.getPassword());

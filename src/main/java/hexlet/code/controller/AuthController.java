@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
 public class AuthController {
 
@@ -29,17 +27,7 @@ public class AuthController {
     public String authUser(@Valid @RequestBody LoginDto requestDto) {
         return authServiceImpl.authenticate(requestDto);
 
-//    ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginDto requestDto) {
-//            return ResponseEntity.ok(authServiceImpl.authenticate(requestDto));
     }
-
-//        } catch (DisabledException e) {
-//            return new ResponseEntity<>("USER_DISABLED" + e.getMessage(), HttpStatus.BAD_REQUEST);
-//        } catch (BadCredentialsException e) {
-//            return new ResponseEntity<>("INVALID_CREDENTIALS"+e.getMessage(), HttpStatus.BAD_REQUEST);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
 
 }
 

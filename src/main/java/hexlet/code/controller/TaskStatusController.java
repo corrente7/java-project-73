@@ -31,7 +31,6 @@ public class TaskStatusController {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
-
     @Operation(summary = "Get all task statuses")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Get list of task statuses")
@@ -40,7 +39,6 @@ public class TaskStatusController {
     public List<TaskStatus> getTaskStatuses() {
         return taskStatusRepository.findAll();
     }
-
 
     @Operation(summary = "Get task status by id")
     @ApiResponses(value = {

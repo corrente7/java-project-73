@@ -10,6 +10,7 @@ import java.util.Set;
 public interface LabelRepository extends CrudRepository<Label, Long> {
 
     Optional<Label> findById(long id);
+    Optional<Label> findByName(String name);
     Set<Label> findByIdIn(Set<Long> id);
     List<Label> findAll();
 }

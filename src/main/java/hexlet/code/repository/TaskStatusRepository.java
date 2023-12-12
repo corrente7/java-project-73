@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface TaskStatusRepository extends CrudRepository<TaskStatus, Long> {
 
     Optional<TaskStatus> findById(Long id);
+    Optional<TaskStatus> findByName(String name);
     List<TaskStatus> findAll();
 }

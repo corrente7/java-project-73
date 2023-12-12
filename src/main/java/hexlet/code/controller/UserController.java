@@ -33,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/users")
 
 public class UserController {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -122,6 +123,4 @@ public class UserController {
         }
         userRepository.deleteById(id);
     }
-
-
 }
