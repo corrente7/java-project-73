@@ -36,10 +36,10 @@ public class SecurityConfig  {
 
         httpSecurity
                 .authorizeHttpRequests()
-                .requestMatchers("/api/welcome").permitAll()
-                .requestMatchers("/api/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .requestMatchers("/api/welcome", "/").permitAll()
+                .requestMatchers("/api/login", "/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users", "/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users", "/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/static/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

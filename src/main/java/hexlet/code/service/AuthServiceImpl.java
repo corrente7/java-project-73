@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static java.util.regex.Pattern.matches;
-
 @Service
 public class AuthServiceImpl {
 
@@ -27,7 +25,7 @@ public class AuthServiceImpl {
 
         String passwordToCheck = requestDto.getPassword();
         //if (!encoder.encode(passwordToCheck).equals(existedUser.getPassword())) {
-        if (!matches(passwordToCheck, existedUser.getPassword())) {
+        if (!encoder.matches(passwordToCheck, existedUser.getPassword())) {
             throw new UsernameNotFoundException("Sign in failed. Incorrect password!");
         }
         return jwtUtils.generateToken(existedUser);
