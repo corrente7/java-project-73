@@ -36,8 +36,9 @@ public class SecurityConfig  {
 
         httpSecurity
                 .authorizeHttpRequests()
-                .requestMatchers("/api/welcome", "/").permitAll()
+                .requestMatchers("/api/welcome").permitAll()
                 .requestMatchers("/api/login", "/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users", "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users", "/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/static/**").permitAll()
@@ -56,10 +57,6 @@ public class SecurityConfig  {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

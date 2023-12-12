@@ -24,7 +24,6 @@ public class AuthServiceImpl {
                 .orElseThrow(() -> new UsernameNotFoundException("Sign in failed. User not found!"));
 
         String passwordToCheck = requestDto.getPassword();
-        //if (!encoder.encode(passwordToCheck).equals(existedUser.getPassword())) {
         if (!encoder.matches(passwordToCheck, existedUser.getPassword())) {
             throw new UsernameNotFoundException("Sign in failed. Incorrect password!");
         }
