@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), new BCryptPasswordEncoder().encode(user.getPassword()), authorities
+                user.getEmail(), user.getPassword(), authorities
         );
     }
 
