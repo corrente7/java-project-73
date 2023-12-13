@@ -6,6 +6,8 @@ import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
+import org.instancio.Select;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ public class AuthTests {
     @Autowired
     private UserRepository userRepository;
 
+
     @Autowired
     private TestUtils testUtil;
 
@@ -43,27 +46,28 @@ public class AuthTests {
     @BeforeEach
     public void setUp() {
         testUser = Instancio.of(testUtil.getUserModel())
+                .set(Select.field(User::getPassword), "password")
                 .create();
         userRepository.save(testUser);
     }
 
-//    @Test
-//    public void loginUserTest() throws Exception {
-//        LoginDto credentials = new LoginDto(testUser.getEmail(), testUser.getPassword());
-//
-//        MockHttpServletResponse login = mockMvc
-//                .perform(post(baseUrl + "/api/login")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(om.writeValueAsString(credentials)))
-//                .andReturn()
-//                .getResponse();
-//
-//        assertThat(login.getStatus()).isEqualTo(200);
-//    }
+    @Test
+    public void loginUserTest() throws Exception {
+        LoginDto credentials = new LoginDto(testUser.getEmail(), "password");
+
+        MockHttpServletResponse login = mockMvc
+                .perform(post(baseUrl + "/api/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(credentials)))
+                .andReturn()
+                .getResponse();
+
+        assertThat(login.getStatus()).isEqualTo(200);
+    }
 
     @Test
     public void loginNonValidTest() throws Exception {
-        LoginDto credentials = new LoginDto("ppp@gmail.com", testUser.getPassword());
+        LoginDto credentials = new LoginDto(testUser.getEmail(), "wrong_password");
 
         MockHttpServletResponse login = mockMvc
                 .perform(post(baseUrl + "/api/login")
