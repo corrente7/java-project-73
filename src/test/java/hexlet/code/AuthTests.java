@@ -7,6 +7,7 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
 import org.instancio.Select;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,11 @@ public class AuthTests {
                 .set(Select.field(User::getPassword), "password")
                 .create();
         userRepository.save(testUser);
+    }
+
+    @AfterEach
+    void clean() {
+        testUtil.clean();
     }
 
     //перестал работать этот тест, пишет Encoded password does not look like BCrypt, не пойму что это,
