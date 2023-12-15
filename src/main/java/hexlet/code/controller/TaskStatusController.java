@@ -3,7 +3,7 @@ package hexlet.code.controller;
 
 import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.model.TaskStatus;
-import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.service.TaskStatusService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class TaskStatusController {
 
     @Autowired
-    private TaskStatusRepository taskStatusRepository;
+    private TaskStatusService taskStatusService;
 
     @Operation(summary = "Get all task statuses")
     @ApiResponses(value = {
@@ -37,7 +36,7 @@ public class TaskStatusController {
     })
     @GetMapping(path = "")
     public List<TaskStatus> getTaskStatuses() {
-        return taskStatusRepository.findAll();
+        return taskStatusService.getTaskStatuses();
     }
 
     @Operation(summary = "Get task status by id")
@@ -46,8 +45,7 @@ public class TaskStatusController {
     })
     @GetMapping(path = "/{id}")
     public TaskStatus getTaskStatus(@PathVariable long id) {
-        return taskStatusRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("TaskStatus not found"));
+        return taskStatusService.getTaskStatus(id);
     }
 
     @Operation(summary = "Create new task status")
@@ -58,10 +56,7 @@ public class TaskStatusController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public TaskStatus createTaskStatus(@Valid @RequestBody TaskStatusDto taskStatusDto) {
-
-        TaskStatus taskStatus = new TaskStatus();
-        taskStatus.setName(taskStatusDto.getName());
-        return taskStatusRepository.save(taskStatus);
+        return taskStatusService.createTaskStatus(taskStatusDto);
     }
 
     @Operation(summary = "Update task status by id")
@@ -71,13 +66,7 @@ public class TaskStatusController {
     })
     @PutMapping(path = "/{id}")
     public TaskStatus updateTaskStatus(@RequestBody TaskStatusDto taskStatusDto, @PathVariable long id) {
-        if (!taskStatusRepository.existsById(id)) {
-            throw new NoSuchElementException("TaskStatus not found");
-        }
-        TaskStatus taskStatus = taskStatusRepository.findById(id).get();
-
-        taskStatus.setName(taskStatusDto.getName());
-        return taskStatusRepository.save(taskStatus);
+        return taskStatusService.updateTaskStatus(taskStatusDto, id);
     }
 
     @Operation(summary = "Delete task status by id")
@@ -86,12 +75,7 @@ public class TaskStatusController {
     })
     @DeleteMapping(path = "/{id}")
     public void deleteTaskStatus(@PathVariable long id) {
-        if (!taskStatusRepository.existsById(id)) {
-            throw new NoSuchElementException("TaskStatus not found");
-        }
-        taskStatusRepository.deleteById(id);
+        taskStatusService.deleteTaskStatus(id);
     }
-
-
 
 }

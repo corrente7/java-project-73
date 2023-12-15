@@ -1,15 +1,12 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.UserDto;
-import hexlet.code.exception.UserNotFoundException;
 import hexlet.code.model.User;
-import hexlet.code.model.UserRole;
-import hexlet.code.repository.UserRepository;
 import hexlet.code.service.UserDetailsServiceImpl;
+import hexlet.code.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +19,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 
 import java.util.List;
-import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,10 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder encoder;
+    private UserService userService;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
@@ -49,7 +41,8 @@ public class UserController {
     })
     @GetMapping(path = "")
     public List<User> getUsers() {
-        return userRepository.findAll();
+
+        return userService.getUsers();
     }
 
     @Operation(summary = "Get user by id")
@@ -58,8 +51,7 @@ public class UserController {
     })
     @GetMapping(path = "/{id}")
     public User getUser(@PathVariable long id) {
-        return userRepository.findById(id)
-               .orElseThrow(() -> new UserNotFoundException("User" + id + "not found"));
+        return userService.getUser(id);
     }
 
     @Operation(summary = "Create new user")
@@ -70,14 +62,8 @@ public class UserController {
     @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody UserDto userDto) {
+        return userService.createUser(userDto);
 
-        User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(encoder.encode(userDto.getPassword()));
-        user.setRole(UserRole.USER);
-        return userRepository.save(user);
     }
 
     @Operation(summary = "Update user by id")
@@ -87,23 +73,7 @@ public class UserController {
     })
     @PutMapping(path = "/{id}")
     public User updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException("User" + id + "not found");
-        }
-        User user = userRepository.findById(id).get();
-
-        User currentUser = userDetailsServiceImpl.getCurrentUserName();
-
-        if (!Objects.equals(currentUser, user)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(encoder.encode(userDto.getPassword()));
-        user.setRole(user.getRole());
-        return userRepository.save(user);
+        return userService.updateUser(userDto, id);
     }
 
     @Operation(summary = "Delete user by id")
@@ -112,15 +82,6 @@ public class UserController {
     })
     @DeleteMapping(path = "/{id}")
     public void deleteUser(@PathVariable long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException("User" + id + "not found");
-        }
-        User user = userRepository.findById(id).get();
-        User currentUser = userDetailsServiceImpl.getCurrentUserName();
-
-        if (!Objects.equals(currentUser, user)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        userRepository.deleteById(id);
+        userService.deleteUser(id);
     }
 }

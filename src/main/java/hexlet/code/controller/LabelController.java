@@ -2,7 +2,7 @@ package hexlet.code.controller;
 
 import hexlet.code.dto.LabelDto;
 import hexlet.code.model.Label;
-import hexlet.code.repository.LabelRepository;
+import hexlet.code.service.LabelService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,14 +21,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/labels")
 public class LabelController {
 
     @Autowired
-    private LabelRepository labelRepository;
+    private LabelService labelService;
 
     @Operation(summary = "Get all labels")
     @ApiResponses(value = {
@@ -36,7 +35,8 @@ public class LabelController {
     })
     @GetMapping(path = "")
     public List<Label> getLabels() {
-        return labelRepository.findAll();
+
+        return labelService.getLabels();
     }
 
 
@@ -46,8 +46,7 @@ public class LabelController {
     })
     @GetMapping(path = "/{id}")
     public Label getLabel(@PathVariable long id) {
-        return labelRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Label not found"));
+        return labelService.getLabel(id);
     }
 
 
@@ -59,10 +58,7 @@ public class LabelController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public Label createLabel(@Valid @RequestBody LabelDto labelDto) {
-
-        Label label = new Label();
-        label.setName(labelDto.getName());
-        return labelRepository.save(label);
+        return labelService.createLabel(labelDto);
     }
 
     @Operation(summary = "Update label by id")
@@ -72,24 +68,15 @@ public class LabelController {
     })
     @PutMapping(path = "/{id}")
     public Label updateLabel(@RequestBody LabelDto labelDto, @PathVariable long id) {
-        if (!labelRepository.existsById(id)) {
-            // Если не существует, возвращаем код ответа 404
-            throw new NoSuchElementException("Label not found");
-        }
-        Label label = labelRepository.findById(id).get();
-
-        label.setName(labelDto.getName());
-        return labelRepository.save(label);
+        return labelService.updateLabel(labelDto, id);
     }
+
     @Operation(summary = "Delete label by id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Delete label by id")
     })
     @DeleteMapping(path = "/{id}")
     public void deleteLabel(@PathVariable long id) {
-        if (!labelRepository.existsById(id)) {
-            throw new NoSuchElementException("Label not found");
-        }
-        labelRepository.deleteById(id);
+        labelService.deleteLabel(id);
     }
 }

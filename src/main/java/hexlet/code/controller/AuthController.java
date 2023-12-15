@@ -1,7 +1,7 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.LoginDto;
-import hexlet.code.service.AuthServiceImpl;
+import hexlet.code.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
 
     @Autowired
-    private AuthServiceImpl authServiceImpl;
+    private AuthService authServiceImpl;
 
     @Operation(summary = "Log in user")
     @ApiResponses(value = {

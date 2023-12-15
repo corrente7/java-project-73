@@ -5,7 +5,7 @@ import hexlet.code.dto.TaskDto;
 import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
-import hexlet.code.service.TaskServiceImpl;
+import hexlet.code.service.TaskService;
 import hexlet.code.service.UserDetailsServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class TaskController {
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
-    private TaskServiceImpl taskServiceImpl;
+    private TaskService taskServiceImpl;
 
     @Operation(summary = "Get all tasks")
     @ApiResponses(value = {
