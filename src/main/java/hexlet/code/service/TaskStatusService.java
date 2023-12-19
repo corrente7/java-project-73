@@ -36,7 +36,6 @@ public class TaskStatusService {
     }
 
     public void deleteTaskStatus(long id) {
-        taskStatusRepository.findById(id).orElseThrow();
         taskStatusRepository.deleteById(id);
     }
 }

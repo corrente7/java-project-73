@@ -36,4 +36,7 @@ public class TaskStatus {
     @CreationTimestamp
     private Date createdAt;
 
+    public TaskStatus(long id) {
+        this.id = id;
+    }
 }

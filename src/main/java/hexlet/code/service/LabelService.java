@@ -40,7 +40,6 @@ public class LabelService {
     }
 
     public void deleteLabel(long id) {
-        labelRepository.findById(id).orElseThrow();
         labelRepository.deleteById(id);
     }
 

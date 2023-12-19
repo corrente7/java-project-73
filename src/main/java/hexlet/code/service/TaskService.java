@@ -4,16 +4,14 @@ import com.querydsl.core.types.Predicate;
 import hexlet.code.dto.TaskDto;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,7 +39,7 @@ public class TaskService {
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
         task.setAuthor(userDetailsServiceImpl.getCurrentUserName());
-        task.setTaskStatus(taskStatusRepository.findById(taskDto.getTaskStatusId()).orElseThrow());
+        task.setTaskStatus(new TaskStatus(taskDto.getTaskStatusId()));
         task.setExecutor(taskDto.getExecutor());
         task.setLabels(labels);
         return taskRepository.save(task);
@@ -55,6 +53,7 @@ public class TaskService {
 
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
+        task.setTaskStatus(new TaskStatus(taskDto.getTaskStatusId()));
         task.setExecutor(taskDto.getExecutor());
         task.setLabels(labels);
         return taskRepository.save(task);
@@ -84,7 +83,10 @@ public class TaskService {
 
     public Set<Label> addLabels(TaskDto taskDto) {
 
-        Set<Label> labels = labelRepository.findByIdIn(taskDto.getLabelIds());
+        Set<Label> labels = new HashSet<>();
+        for (long id: taskDto.getLabelIds()) {
+            labels.add(new Label(id));
+        }
         return labels;
 
     }
